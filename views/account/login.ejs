@@ -1,0 +1,28 @@
+<div class="container">
+  <h1><%= title %></h1>
+
+  <%- messages() %>
+
+  <form id="loginForm" action="/account/login" method="post">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="account_email" required />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="account_password" required />
+
+    <p>
+      Password must be minimum of 12 characters and include 1 capital letter, 1
+      number and 1 special character.
+    </p>
+
+    <span id="shw-password">Show Password</span>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div class="register-link">
+    <p>No account? <a href="/account/register">Sign-up</a></p>
+  </div>
+</div>
+
+<script src="/js/script.js"></script>
