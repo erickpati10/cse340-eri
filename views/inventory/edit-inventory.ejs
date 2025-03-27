@@ -12,7 +12,7 @@
 </ul>
 <% } %>
 <div class="container">
-  <form action="add-inventory" method="POST">
+  <form action="/inv/update" method="POST">
     <label for="classificationList">Classification</label>
     <%- classificationSelect %>
     <br /><br />
@@ -35,16 +35,14 @@
       value="<%= locals.inv_model %>"
     /><br /><br />
 
-    <label for="inv_description">Description:</label> <br />
+    <label for="inv_description">Description:</label> 
     <textarea
       id="inv_description"
       name="inv_description"
-      rows="5"
-      cols="80"
       required
-      value="<%= locals.inv_description %>"
-    ></textarea
-    ><br /><br />
+    ><%= locals.inv_description %></textarea>
+    <br /><br />
+    
 
     <label for="inv_image">Image Path:</label> <br />
     <input
@@ -71,7 +69,7 @@
       name="inv_price"
       required
       value="<%= locals.inv_price %>"
-    /><br /><br />
+    /><br />
 
     <label for="inv_year">Year:</label>
     <input
@@ -100,6 +98,9 @@
       value="<%= locals.inv_color %>"
     /><br /><br />
 
-    <button type="submit">Add Vehicle</button>
+    <input type="hidden" name="inv_id" <% if(locals.inv_id) { %> value="<%=
+    locals.inv_id %>" <% } %>> 
+
+    <button type="submit">Update Vehicle</button>
   </form>
 </div>

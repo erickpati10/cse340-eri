@@ -37,4 +37,40 @@ router.post(
   utilities.handleErrors(invController.addNewInventory)
 );
 
+/* *************************************
+ * Get inventory for AJAX Route
+ * Unit 5, Select inv Item activity
+ **************************************** */
+router.get(
+  "/getInventory/:classification_id",
+  // utilities.checkAccountType,
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
+/* *************************************
+ * Update the inventory
+ *
+ **************************************** */
+
+router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
+);
+
+router.post(
+  "/update/",
+  regValidate.validateVehicleRules(),
+  regValidate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+);
+
+router.get(
+  "/delete/:inv_id",
+  utilities.handleErrors(invController.deleteInventoryView)
+);
+
+router.post("/delete/",   
+  utilities.handleErrors(invController.deleteInventory)
+  );
+
 module.exports = router;

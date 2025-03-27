@@ -3,6 +3,8 @@
 const utilities = require("../utilities");
 const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 /* ****************************************
  *  Deliver login view
@@ -80,4 +82,175 @@ async function registerAccount(req, res) {
   }
 }
 
-module.exports = { buildLogin, buildRegister, registerAccount };
+/* ****************************************
+ *  Process login request
+ * ************************************ */
+async function accountLogin(req, res) {
+  let nav = await utilities.getNav();
+  const { account_email, account_password } = req.body;
+  const accountData = await accountModel.getAccountByEmail(account_email);
+  if (!accountData) {
+    req.flash("notice", "Please check your credentials and try again.");
+    res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    });
+    return;
+  }
+  try {
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
+      delete accountData.account_password;
+      const accessToken = jwt.sign(
+        accountData,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: 3600 * 1000 }
+      );
+      if (process.env.NODE_ENV === "development") {
+        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+      } else {
+        res.cookie("jwt", accessToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600 * 1000,
+        });
+      }
+      return res.redirect("/account/");
+    } else {
+      req.flash(
+        "message notice",
+        "Please check your credentials and try again."
+      );
+      res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      });
+    }
+  } catch (error) {
+    throw new Error("Access Forbidden");
+  }
+}
+
+/* ****************************************
+ *  Management view
+    Unit 5 
+ * *************************************** */
+
+async function accountManagementView(req, res) {
+  let nav = await utilities.getNav();
+  res.render("account/accountManagement", {
+    title: "Account Management",
+    nav,
+  });
+}
+
+/* ****************************************
+ *  Deliver login access page
+ * ************************************ */
+async function accountLoginSuccess(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("account/accountManagement", {
+    title: "Login Successful",
+    nav,
+    errors: null,
+  });
+}
+
+/* ****************************************
+ *  Deliver Update Account page
+ * ************************************ */
+
+async function updateAccountPage(req, res, next) {
+  let nav = await utilities.getNav()
+  res.render("account/updateAccount", {
+    title: "Update Account",
+    nav,
+    errors: null
+   
+  })
+}
+
+/* ****************************************
+ *  Process the account update request
+ * ************************************ */
+  
+async function updateAccount(req, res, next) {
+  try {
+    const { account_firstname, account_lastname, account_email, account_id } = req.body;
+
+    await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email);
+
+    req.flash("notice", `${account_firstname}, your account was updated successfully.`);
+    return res.redirect("/account");
+  } catch (error) {
+    console.error("Error updating account information:", error);
+
+    let nav = await utilities.getNav();
+
+    return res.status(400).render("account/updateAccount", {
+      title: "Update Account",
+      nav,
+      errors: null, 
+      account_firstname,
+      account_lastname,
+      account_email,
+      account_id, 
+    });
+  }
+}
+/* ****************************************
+ *  Process the password update request
+ * ************************************ */
+async function updatePassword(req, res, next) {
+  try {
+    const { account_password, account_id } = req.body;
+
+    const accountData = await accountModel.getAccountById(account_id);
+
+    if (!accountData) {
+      req.flash("notice", "Account not found.");
+      return res.redirect("/account/update_password");
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+
+    
+    await accountModel.updatePassword(account_id, hashedPassword);
+
+    
+    req.flash("notice", `${accountData.account_firstname}, your password was updated successfully.`);
+    res.redirect("/account");
+  } catch (error) {
+    console.error("Error updating password:", error);
+    next(error);
+  }
+}
+
+
+/* ****************************************
+ *  Handle logout
+ * ************************************ */
+async function logout(req, res) {
+  res.clearCookie('jwt');
+  res.redirect('/');
+}
+
+
+
+
+module.exports = {
+  buildLogin,
+  buildRegister,
+  registerAccount,
+  accountLogin,
+  accountManagementView,
+  accountLoginSuccess,
+  updateAccountPage,
+  updateAccount,
+  updatePassword,
+  logout
+};

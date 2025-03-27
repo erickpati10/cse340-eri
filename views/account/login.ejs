@@ -1,7 +1,15 @@
-<div class="container">
-  <h1><%= title %></h1>
 
-  <%- messages() %>
+  
+<div class="container-form">
+
+  <% if (title) { %>
+    <h1><%= title %></h1>
+    <%} else { res.redirect("/")}%> <br />
+    
+    <%- messages() %> 
+    
+    
+
 
   <form id="loginForm" action="/account/login" method="post">
     <label for="email">Email:</label>
