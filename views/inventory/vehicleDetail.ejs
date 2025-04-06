@@ -1,3 +1,50 @@
 <% if (title) { %>
 <h1><% title %></h1>
 <% } else { res.redirect('/') } %> <%- htmlContent %>
+
+
+<!-- Reviews Section -->
+<h2>Reviews</h2>
+
+<% if (review && review.length > 0) { %>
+ 
+  <ul>
+    <% review.forEach(review => { %>
+      <li>
+        <p><%= review.screen_name %> reviewed on <%= new Date(review.review_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></p>
+        <p><%= review.review_text %></p>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>No reviews yet. Be the first to leave one!</p>
+<% } %>
+
+<!-- Review Section -->
+
+<% if (accountData) { %> 
+  <% if (accountData.account_type === "Client" || accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+
+    <h2>Add your on Review</h2>
+    <form class="review" action="/review/add" method="POST">
+      <fieldset>
+
+        <label for="screen_name">Screen Name:</label><br>
+        <input type="text" id="screen_name" name="screen_name" value="<%= accountData.account_firstname.charAt(0) + accountData.account_lastname %>" disabled><br>
+
+        <label for="review_text">Review:</label><br>
+        <textarea id="review_text" name="review_text" rows="4" required></textarea><br>
+
+        <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+        <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+
+        <button class="submit-review" type="submit">Submit Review</button>
+      </fieldset>
+    </form>
+  <% } %>
+<% } else { %> 
+  <p>You must <a href="/account/login">log in</a> to leave a review.</p>
+<% } %>
+
+  
+  

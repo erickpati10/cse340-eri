@@ -18,6 +18,7 @@ const session = require("express-session");
 const pool = require("./database/");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const reviewRoute = require("./routes/reviewRoute");  //this has been added for the review 
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(
     name: "sessionId",
   })
 );
+
 
 // Express Messages Middleware
 app.use(require("connect-flash")());
@@ -70,6 +72,9 @@ app.use("/inv", inventoryRoute);
 app.use("/account", require("./routes/accountRoute"));
 // Error Route
 app.use("/", errRoute);
+
+app.use("/review", reviewRoute); //this has been added for the review route
+
 
 /* ************************************
  * File Not Found Route - must be last route in list

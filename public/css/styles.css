@@ -474,6 +474,105 @@ button:hover {
   font-family: Arial, sans-serif;
 }
 
+/* ************************ EDIT FORM FOR LEAVING A REVIEW ********************************* */
+
+
+.review-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.review-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: hsl(184, 87%, 49%);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-form div {
+  margin-bottom: 15px;
+}
+
+
+.date-review {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-review label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  
+}
+
+.review-date-box {
+  max-width: 40%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #53e11a;
+}
+
+
+.review-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-box label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  
+}
+
+textarea {
+  max-width: 75%;
+  padding: 10px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  resize: vertical;
+}
+
+
+.update-button {
+  max-width:35%;
+  background-color: #0b1118;
+  color: white;
+  font-size: 12px;
+  padding: 7px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
+/* ************************ REVIEW FORM FOR LEAVING A REVIEW ********************************* */
+
+
+.review input{
+  max-width: 30%;
+}
+
+.submit-review {
+  padding: 5px;
+  margin: 5px;
+  font-size:15px ;
+
+}
+
+
+
+
 /* ************************************************* RESPONSIVE ************************************************************ */
 
 @media only screen and (min-width: 768px) {
@@ -573,4 +672,15 @@ button:hover {
   #upgrades {
     width: 45%;
   }
+}
+
+.submit-review {
+max-width: 30%;
+}
+
+.delete-button{
+  max-width: 30%;
+  font-size: 12px;
+  padding: 5px;
+  margin: 5px;
 }

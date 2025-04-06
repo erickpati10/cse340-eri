@@ -18,3 +18,23 @@ accountData.account_type === "Admin") { %>
 <h3>Inventory Management</h3>
 <a href="/account/updateAccount">Update Account Information</a>
 <% } %>
+
+<br>
+<br>
+
+<h3>My Reviews</h3>
+<% if (reviews && reviews.length > 0) { %>
+  <ul>
+    <% reviews.forEach(review => { %>
+      <li>
+        Reviewed the <%= review.inv_year %> <%= review.inv_make %> <%= review.inv_model %> on 
+        <%= new Date(review.review_date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) %> 
+        | <a href="/review/edit/<%= review.review_id %>">edit</a> 
+        | <a href="/review/delete/<%= review.review_id %>">delete</a>
+        </p>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>You have not submitted any reviews yet.</p>
+<% } %>

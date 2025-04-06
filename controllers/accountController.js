@@ -5,6 +5,8 @@ const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const reviewModel = require("../models/review-model");
+
 
 /* ****************************************
  *  Deliver login view
@@ -139,13 +141,30 @@ async function accountLogin(req, res) {
     Unit 5 
  * *************************************** */
 
-async function accountManagementView(req, res) {
-  let nav = await utilities.getNav();
-  res.render("account/accountManagement", {
-    title: "Account Management",
-    nav,
-  });
-}
+    async function accountManagementView(req, res) {
+      let nav = await utilities.getNav();
+      const accountId = res.locals.accountData.account_id;
+    
+      try {
+        const reviews = await reviewModel.getReviewsByAccountId(accountId);
+    
+        res.render("account/accountManagement", {
+          title: "Account Management",
+          nav,
+          accountData: res.locals.accountData,
+          reviews, 
+        });
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        req.flash("notice", "Error loading your reviews.");
+        res.render("account/accountManagement", {
+          title: "Account Management",
+          nav,
+          accountData: res.locals.accountData,
+          reviews: [],
+        });
+      }
+    }
 
 /* ****************************************
  *  Deliver login access page

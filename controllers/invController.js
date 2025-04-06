@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model");
 const utilities = require("../utilities/");
+const reviewModel = require("../models/review-model");
 
 const invCont = {};
 
@@ -19,6 +20,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
       title: className + " vehicles",
       nav: nav,
       grid,
+      
     });
   } catch (error) {
     console.error("Error building classification view:", error);
@@ -39,11 +41,23 @@ invCont.getVehicleDetails = async function (req, res) {
     }
     let nav = await utilities.getNav();
 
+
+    // this has been added for the final task - Week 13
+
+    const review = await reviewModel.getReviewsByInvId(inventory_id); 
+  
+
+
     const htmlContent = utilities.wrapVehicleDetailsInHTML(vehicleDetails);
     res.render("./inventory/vehicleDetail", {
       title: vehicleDetails.inv_model,
       nav: nav,
       htmlContent,
+      review,
+      vehicle: vehicleDetails,
+      loggedin: req.session.loggedin,
+      accountData: res.locals.accountData,
+      
     });
   } catch (error) {
     console.error("Error fetching vehicle details:", error);
